@@ -8,6 +8,7 @@ class AgentState(TypedDict):
     date:str
 
     # Raw inputs (what user logs)
+    user_input: str
     meals:dict # where each dict have meal_type and foods feild , like this 4 dicts for four type of meals
     workout:dict
     others:dict # contains screen-time, water-intake, sleep-duration
