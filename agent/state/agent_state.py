@@ -1,72 +1,34 @@
-from typing import List
+from typing import Any, Dict, List
+
+from langchain_core.messages import BaseMessage
 from typing_extensions import TypedDict
 
 
 class AgentState(TypedDict):
-    # Identity
-    user_id:str
-    date:str
+    # ---Identity---
+    user_id: str
+    date: str
 
-    # Raw inputs (what user logs)
+    # ---From Telegram---
     user_input: str
-    meals:dict # where each dict have meal_type and foods feild , like this 4 dicts for four type of meals
-    workout:dict
-    others:dict # contains screen-time, water-intake, sleep-duration
+    messages: List[BaseMessage]
+    bot_reply: str
 
-    # Derived data from nodes
-    daily_totals:dict # protein, carbs, fat, calories
-    feedback:str # today's misatkes + improvements
-    plan:str # tomorrow's plan
-    messages:List[str] # conversation history
+    # ---Conversation Flow---
+    conversation_stage: str
 
+    # "idle" | "awaiting_category" | "awaiting_meal_type" | "awaiting_meal_items" | "awaiting_workout_type" | "awaiting_exercise_details" | "awaiting_others_category" | "awaiting_sleep" | "awaiting_water" | "awaiting_screen_time" | "awaiting_correction" | "report_generation"
 
+    # ---Logged Data---
+    meals: Dict[str, Any]
+    logged_meals: List[str]
+    workout: Dict[str, Any]
+    others: Dict[str, Any]
 
-"""
-### Data Structure : ###
+    # ---computed---
+    daily_totals: Dict[str, Any]
 
-user_id: ""
-date: ""
-
-meals: {
-    breakfast: {
-        foods: [...foods goes here],
-        macros: {
-            carb:x,
-            protein:y
-            fat:z
-            total_calories:a
-        }
-    },
-    lunch:{},
-    supper:{},
-    dinner:{}
-}
-
-
-workout: {
-    weight_training: [
-        {
-            "workout_name":"bench press",
-            "total_weight":"60kg",
-            "sets":4,
-            "reps":10,
-            "res_between_sets":"2min"
-        }
-    ],
-    cardio: [{}]
-}
-
-others: {
-    "sleep_hours":7,
-    "water_glass":10,
-    "screen_time_in_minutes:120
-}
-
-daily_totals: {}
-feedback: "" #
-plan: ""
-messages:[""]
-
-
-
-"""
+    # ---output---
+    feedback: str
+    plan: str
+    weekly_report: str
