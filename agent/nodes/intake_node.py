@@ -1,19 +1,57 @@
-from langchain_core.messages import HumanMessage
 from agent.state.agent_state import AgentState
 
 
 def intake_node(state: AgentState) -> dict:
-    # 1. user input
+    # read user input & conversation_stage from state
     user_text = state["user_input"]
+    convo_stage = state["conversation_stage"]
+    logged_meals = state.get("logged_meals", [])
 
-    # 2. converting user input to proper HumanMessage format
-    new_message = [HumanMessage(content=user_text)]
+    result = {"bot_reply": ""}
 
-    # 3. getting current messages list
-    current_message = state.get("messages", [])
+    if convo_stage in ("idle", "awaiting_category"):
+        mapping_user_input = {
+            "food": "awaiting_meal_type",
+            "workout": "awaiting_workout_type",
+            "others": "awaiting_others_category",
+            "report": "report_generation",
+        }
+        new_convo_stage = mapping_user_input.get(user_text, "awaiting_category")
+        result["conversation_stage"] = new_convo_stage
+        return result
 
-    # 4. appending current messages with user new message
-    updated_messages = current_message + new_message
+    if convo_stage == "awaiting_meal_type":
+        valid_meals = ("breakfast", "lunch", "dinner", "snacks")
+        if user_text in valid_meals:
+            if user_text in logged_meals:
+                result["bot_reply"] = (
+                    f"🌅 {user_text.capitalize()} already logged today!"
+                )
+                result["conversation_stage"] = "awaiting_category"
+                return result
 
-    # 5. returnign the final full message
-    return {"messages": updated_messages}
+            result["chosen_meal"] = user_text
+            result["conversation_stage"] = "awaiting_meal_items"
+            return result
+
+        result["conversation_stage"] = "awaiting_meal_type"
+        return result
+
+    if convo_stage == "awaiting_meal_items":
+        # let respond_node handle this
+        return result
+
+    if convo_stage == "awaiting_workout_type":
+        return result
+
+    if convo_stage == "awaiting_exercise_details":
+        return result
+
+    if convo_stage == "awaiting_others_category":
+        return result
+
+    if convo_stage == "report_generation":
+        return result
+
+    result["conversation_stage"] = "awaiting_category"
+    return result

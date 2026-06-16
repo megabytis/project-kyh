@@ -22,6 +22,7 @@ class AgentState(TypedDict):
     # ---Logged Data---
     meals: Dict[str, Any]
     logged_meals: List[str]
+    chosen_meal: str
     workout: Dict[str, Any]
     others: Dict[str, Any]
 
