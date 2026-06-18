@@ -32,7 +32,7 @@ def respond_node(state: AgentState) -> dict:
 
         if user_input in ("breakfast", "lunch", "dinner", "snacks"):
             return {"bot_reply": f"What did you eat for {meal_type}? 🍽️"}
-
+
         # if user has not entered anything like breakfast, lunch liek that , i.e. user have enter food names
         # now i have to call llm to calculate the macros
         prompt = [
@@ -46,8 +46,25 @@ def respond_node(state: AgentState) -> dict:
         updated_response = messages + [response]
 
         # now marking meal as logged and will return the main user_input
-        new_logged = list(state.get("logged_meals".[]))
+        new_logged = list(state.get("logged_meals", []))
         if meal_type not in new_logged:
             new_logged.append(meal_type)
 
-        return {"bot_reply":"What would you like to do ?"}
+        meals_dict = state.get("meals", {})
+
+        parsed_foods = []
+        parsed_macros = {}
+
+        meals_dict[meal_type] = {
+            "foods": [],
+            "macros": {},
+            "raw_llm_response": response.content,
+        }
+
+        return {
+            "meals": meals_dict,
+            "logged_meals": new_logged,
+            "bot_reply": reply,
+            "conversation_stage": "idle",
+            "messages": updated_response,
+        }

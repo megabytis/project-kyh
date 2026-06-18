@@ -5,7 +5,7 @@ export const initSession = async (req, res) => {
     const { userId } = req.query;
     if (!userId) return res.status(400).json({ error: "userId required!" });
 
-    const today = new Date().toIsoString().split("T")[0];
+    const today = new Date().toISOString().split("T")[0];
 
     let session = await Session.findOne({ userId, date: today });
     if (!session) {

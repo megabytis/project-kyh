@@ -6,6 +6,8 @@ from pydantic import BaseModel
 app = FastAPI(title="KYH Agent")
 
 
+# this is a pydantic class based on AgentState to validate the user input json body feilds
+# it's exactly liek TypeScript : strict typechecking
 class ProcessRequest(BaseModel):
     user_id: str
     date: str
@@ -26,7 +28,7 @@ class ProcessRequest(BaseModel):
 
 @app.post("/process")
 async def process(req: ProcessRequest):
-    state = req.model_dump()
+    state = req.model_dump()  # so here it is ensuring and checkign wheather our input feild data type matching with pydantic class feild's datatype or not, if yes then pass it else throw error, but witout this also we can directly pass our input dict to graph , but this is more SECURE.
     result = await graph.ainvoke(state)
     return result
 

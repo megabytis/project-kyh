@@ -12,7 +12,7 @@ export const handleChat = async (req, res) => {
         .json({ reply: "userId and message required", stage: "idle" });
     }
 
-    const today = new Date().toIsoString().split("T")[0];
+    const today = new Date().toISOString().split("T")[0];
 
     // 1. load or create session
     let session = await Session.findOne({ userId, date: today });
@@ -25,12 +25,29 @@ export const handleChat = async (req, res) => {
     }
 
     // 2. now updating with current message
-    const state = session.toObject();
-    state.user_input = message;
+    const state = {
+      user_id: session.userId,
+      date: session.date,
+      user_input: message,
+      conversation_stage: session.conversationStage,
+      chosen_meal: session.chosenMeal,
+      logged_meals: session.loggedMeals,
+      meals: session.meals,
+      workout: session.workout,
+      others: session.others,
+      daily_totals: session.dailyTotals,
+      messages: session.messages,
+      bot_reply: session.botReply,
+      feedback: session.feedback,
+      plan: session.plan,
+      weekly_report: "",
+    };
+
     delete state._id;
     delete state.__v;
     delete state.updatedAt;
     delete state.createdAt;
+    console.log(state);
 
     // now sending state to FastAPI endpoint
     const response = await axios.post(`${FASTAPI_URL}/process`, state, {
@@ -40,17 +57,17 @@ export const handleChat = async (req, res) => {
 
     // now saving the updated state to MongoDB
     Object.assign(session, {
-      conversationStage: { type: String, default: "idle" },
-      chosenMeal: { type: String, default: "" },
-      loggedMeals: { type: [String], default: [] },
-      meals: { type: mongoose.Schema.Types.Mixed, default: {} },
-      workout: { type: mongoose.Schema.Types.Mixed, default: {} },
-      others: { type: mongoose.Schema.Types.Mixed, default: {} },
-      dailyTotals: { type: mongoose.Schema.Types.Mixed, default: {} },
-      messages: { type: [Object], default: [] },
-      botReply: { type: String, default: "" },
-      feedback: { type: String, default: "" },
-      plan: { type: String, default: "" },
+      conversationStage: result.conversation_stage || "idle",
+      chosenMeal: result.chosen_meal || "",
+      loggedMeals: result.logged_meals || [],
+      meals: result.meals || {},
+      workout: result.workout || {},
+      others: result.others || {},
+      dailyTotals: result.daily_totals || {},
+      messages: result.messages || [],
+      botReply: result.bot_reply || "",
+      feedback: result.feedback || "",
+      plan: result.plan || "",
     });
     await session.save();
 

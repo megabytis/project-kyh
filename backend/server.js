@@ -1,7 +1,7 @@
 import express from "express";
 import cors from "cors";
-import mongoose from "mongoose";
-require("dotenv").config();
+import dotenv from "dotenv";
+dotenv.config();
 
 import chatRoute from "./routes/chat.js";
 import sessionRoute from "./routes/session.js";
@@ -13,7 +13,7 @@ app.use(express.json());
 
 // routes
 app.use("/api/chat", chatRoute);
-app.use("/api/chat", sessionRoute);
+app.use("/api/session", sessionRoute);
 
 const PORT = process.env.PORT || 3000;
 connectDB()
