@@ -1,3 +1,5 @@
+import re
+
 from agent.state.agent_state import AgentState
 from langchain_core.messages import HumanMessage, SystemMessage, content
 from agent.llm.llm_client import llm
@@ -41,9 +43,13 @@ def respond_node(state: AgentState) -> dict:
             ),
             HumanMessage(content=user_input),
         ]
-        response = llm.invoke(prompt)
-        reply = f"✅ {meal_type.capitalize()} logged!\n{response.content}"
-        updated_response = messages + [response]
+        try:
+            response = llm.invoke(prompt)
+            reply = f"✅ {meal_type.capitalize()} logged!\n{response.content}"
+            updated_response = messages + [response]
+        except Exception as e:
+            print(f"DeepSeek error: {e}")  # or logging
+            reply = "Sorry, couldn't process that. Try again."
 
         # now marking meal as logged and will return the main user_input
         new_logged = list(state.get("logged_meals", []))
@@ -64,6 +70,66 @@ def respond_node(state: AgentState) -> dict:
         return {
             "meals": meals_dict,
             "logged_meals": new_logged,
+            "bot_reply": reply,
+            "conversation_stage": "idle",
+            "messages": updated_response,
+        }
+
+    if "convo_stage" == "awaiting_exercise_details":
+        user_input = state["user_input"]
+        workout_type = state.get("chosen_workout")
+
+        # Parsing with LLM
+        prompt_content = """
+
+        Parse the user given workout log into a JSON array of exercises and sets.
+        
+        if the workout is cardio , then format / parse in the following way:
+        e.g. 
+        [{"name": "treadmill", "duration": 15}],
+    
+        But, if the workout is weight training then follow below;
+        Format rules:
+        - Each exercise has an "exercise_name" and "sets" array
+        - Each set has "weight" (in kg) and "reps" (number)
+        - If user writes "60x10", weight=60, reps=10
+        - If user writes "60kg x 10", weight=60, reps=10
+        - If user writes "60 kg 10 reps", weight=60, reps=10
+        - If multiple exercises, separate them in the array
+        - If cardio mentioned, return null for weight_training (handle separately)
+
+        Return ONLY valid JSON. No explanations, no extra text.
+
+        Example input: "bench press: 60x10, 65x8, 65x7 | squat: 100x5, 105x5"
+
+        Example output:
+        [{"exercise_name":"bench press","sets":[{"weight":60,"reps":10},{"weight":65,"reps":8},{"weight":65,"reps":7}]},{"exercise_name":"squat","sets":[{"weight":100,"reps":5},{"weight":105,"reps":5}]}]
+
+        """
+
+        prompt = [
+            SystemMessage(content=prompt_content),
+            HumanMessage(content=user_input),
+        ]
+
+        try:
+            response = llm.invoke(prompt)
+            reply = f"✅ {workout_type} logged."
+            updated_response = messages + [response]
+
+        except Exception as e:
+            print(f"DeepSeek error: {e}")
+            reply = "Sorry, couldn't process that. Try again."
+
+        workout_dict = state.get("workout", {})
+        workout_dict[workout_type] = {
+            "exercise_name": "",
+            "sets": [],
+            "raw_llm_response": response.content,
+        }
+
+        return {
+            "workout": workout_dict,
             "bot_reply": reply,
             "conversation_stage": "idle",
             "messages": updated_response,

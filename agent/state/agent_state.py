@@ -22,6 +22,7 @@ class AgentState(TypedDict):
     logged_meals: List[str]
     chosen_meal: str
     workout: Dict[str, Any]
+    chosen_workout: str
     others: Dict[str, Any]
 
     # ---computed---
@@ -58,13 +59,20 @@ class AgentState(TypedDict):
         logged_meals: ["breakfast", "lunch", "dinner"]
         chosen_meal: "breakfast"   # set temporarily when user picks a meal
     
-        workout: {
-            "total_duration": 60,
-            "cardio": [{"name": "treadmill", "duration": 15}],
-            "weight_training": [
-                {"exercise": "bench press", "sets": 4, "reps": 10, "weight": 60}
-            ]
-        }
+        "workout": {
+        "total_duration": 45,  # optional, user might not provide
+        "cardio": [{"name": "treadmill", "duration": 15}],  # optional
+        "weight_training": [
+            {
+                "exercise_name": "bench press",
+                "sets": [
+                    {"weight": 60, "reps": 10},
+                    {"weight": 65, "reps": 8},
+                    {"weight": 65, "reps": 7}
+                ]
+            }
+        ]
+}
     
         others: {
             "sleep": {"from": "23:00", "to": "06:00"},

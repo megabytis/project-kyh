@@ -38,11 +38,24 @@ def intake_node(state: AgentState) -> dict:
         return result
 
     if convo_stage == "awaiting_meal_items":
-        # let respond_node handle this
         return result
 
     if convo_stage == "awaiting_workout_type":
-        return result
+        # checking if workout already exists
+        if state.get("workout", {}).get("weight_training") or state.get(
+            "workout", {}
+        ).get("cardio"):
+            result["bot_reply"] = "Wokrout already logged today ✅."
+            result["conversation_stage"] = "idle"
+            return result
+
+        valid_workout_keywords = ("Weight training", "cardio", "weights", "running")
+        if user_text in valid_workout_keywords:
+            result["conversation_stage"] = "awaiting_exercise_details"
+            result["bot_reply"] = (
+                "Describe your exercise (workout name : weight x reps, weight x reps, ...)"
+            )
+            return result
 
     if convo_stage == "awaiting_exercise_details":
         return result
