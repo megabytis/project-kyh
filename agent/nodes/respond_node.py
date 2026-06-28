@@ -1,8 +1,7 @@
-import re
+from langchain_core.messages import HumanMessage, SystemMessage
 
-from agent.state.agent_state import AgentState
-from langchain_core.messages import HumanMessage, SystemMessage, content
 from agent.llm.llm_client import llm
+from agent.state.agent_state import AgentState
 
 
 def respond_node(state: AgentState) -> dict:
@@ -75,19 +74,20 @@ def respond_node(state: AgentState) -> dict:
             "messages": updated_response,
         }
 
-    if "convo_stage" == "awaiting_exercise_details":
+    if convo_stage == "awaiting_exercise_details":
+
         user_input = state["user_input"]
-        workout_type = state.get("chosen_workout")
+        workout_type = state.get("chosen_workout_type")
 
         # Parsing with LLM
         prompt_content = """
 
         Parse the user given workout log into a JSON array of exercises and sets.
-        
+
         if the workout is cardio , then format / parse in the following way:
-        e.g. 
+        e.g.
         [{"name": "treadmill", "duration": 15}],
-    
+
         But, if the workout is weight training then follow below;
         Format rules:
         - Each exercise has an "exercise_name" and "sets" array

@@ -1,3 +1,5 @@
+from langchain_core import runnables
+
 from agent.state.agent_state import AgentState
 
 
@@ -49,13 +51,31 @@ def intake_node(state: AgentState) -> dict:
             result["conversation_stage"] = "idle"
             return result
 
-        valid_workout_keywords = ("Weight training", "cardio", "weights", "running")
-        if user_text in valid_workout_keywords:
+        valid_weight_training_keywords = ("weight training", "weights")
+        valid_cardio_keywords = ("cardio", "running")
+
+
+
+        if (
+            user_text.lower() in valid_cardio_keywords
+            or user_text.lower() in valid_weight_training_keywords
+        ):
             result["conversation_stage"] = "awaiting_exercise_details"
-            result["bot_reply"] = (
-                "Describe your exercise (workout name : weight x reps, weight x reps, ...)"
-            )
+
+            if user_text.lower() == "weight training" or user_text.lower() == "weights":
+                result["chosen_workout_type"] = "weight_training"
+                result["bot_reply"] = (
+                    "Describe your exercise (workout name : weight x reps, weight x reps, ... : total duration)"
+                )
+            if user_text.lower() == "cardio" or user_text.lower() == "running":
+                result["chosen_workout_type"] = "cardio"
+                result["bot_reply"] = (
+                    "Describe your exercise (workout name : total duration)"
+                )
+
             return result
+
+        return result
 
     if convo_stage == "awaiting_exercise_details":
         return result

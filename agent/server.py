@@ -17,6 +17,7 @@ class ProcessRequest(BaseModel):
     logged_meals: list = []
     meals: dict = {}
     workout: dict = {}
+    chosen_workout_type: str = ""
     others: dict = {}
     daily_totals: dict = {}
     messages: list = []

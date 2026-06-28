@@ -34,6 +34,7 @@ export const handleChat = async (req, res) => {
       logged_meals: session.loggedMeals,
       meals: session.meals,
       workout: session.workout,
+      chosen_workout_type: session.chosenWorkoutType || "",
       others: session.others,
       daily_totals: session.dailyTotals,
       messages: session.messages,
@@ -47,7 +48,6 @@ export const handleChat = async (req, res) => {
     delete state.__v;
     delete state.updatedAt;
     delete state.createdAt;
-    console.log(state);
 
     // now sending state to FastAPI endpoint
     const response = await axios.post(`${FASTAPI_URL}/process`, state, {
@@ -62,6 +62,7 @@ export const handleChat = async (req, res) => {
       loggedMeals: result.logged_meals || [],
       meals: result.meals || {},
       workout: result.workout || {},
+      chosenWorkoutType: result.chosen_workout_type || "",
       others: result.others || {},
       dailyTotals: result.daily_totals || {},
       messages: result.messages || [],

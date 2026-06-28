@@ -9,6 +9,7 @@ const sessionSchema = new mongoose.Schema(
     loggedMeals: { type: [String], default: [] },
     meals: { type: mongoose.Schema.Types.Mixed, default: {} },
     workout: { type: mongoose.Schema.Types.Mixed, default: {} },
+    chosenWorkoutType: { type: String, default: "" },
     others: { type: mongoose.Schema.Types.Mixed, default: {} },
     dailyTotals: { type: mongoose.Schema.Types.Mixed, default: {} },
     messages: { type: [Object], default: [] },
