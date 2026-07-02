@@ -61,7 +61,10 @@ class AgentState(TypedDict):
 
         "workout": {
         "total_duration": 45,  # optional, user might not provide
-        "cardio": [{"name": "treadmill", "duration": 15}],  # optional
+        "cardio": [
+            {"name": "treadmill", "duration": 15},
+            {"name": "cycle", "duration": 20}
+        ]
         "weight_training": [
             {
                 "exercise_name": "bench press",

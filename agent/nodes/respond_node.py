@@ -75,36 +75,28 @@ def respond_node(state: AgentState) -> dict:
         }
 
     if convo_stage == "awaiting_exercise_details":
-
         user_input = state["user_input"]
         workout_type = state.get("chosen_workout_type")
 
         # Parsing with LLM
         prompt_content = """
 
-        Parse the user given workout log into a JSON array of exercises and sets.
+        Parse the user given workout log into JSON.
 
-        if the workout is cardio , then format / parse in the following way:
-        e.g.
-        [{"name": "treadmill", "duration": 15}],
+        If workout_type is "cardio":
+        - Parse into array of cardio exercises
+        - Each exercise has "name" and "duration" (in minutes)
+        - Example input: "treadmill 15 min, cycle 20"
+        - Example output: [{"name":"treadmill","duration":15},{"name":"cycle","duration":20}]
 
-        But, if the workout is weight training then follow below;
-        Format rules:
-        - Each exercise has an "exercise_name" and "sets" array
-        - Each set has "weight" (in kg) and "reps" (number)
-        - If user writes "60x10", weight=60, reps=10
-        - If user writes "60kg x 10", weight=60, reps=10
-        - If user writes "60 kg 10 reps", weight=60, reps=10
-        - If multiple exercises, separate them in the array
-        - If cardio mentioned, return null for weight_training (handle separately)
+        If workout_type is "weight_training":
+        - Parse into array of exercises with sets
+        - Each exercise has "exercise_name" and "sets" array
+        - Each set has "weight" (in kg) and "reps"
+        - Example input: "bench press: 60x10, 65x8 | squat: 100x5"
+        - Example output: [{"exercise_name":"bench press","sets":[{"weight":60,"reps":10},{"weight":65,"reps":8}]},{"exercise_name":"squat","sets":[{"weight":100,"reps":5}]}]
 
-        Return ONLY valid JSON. No explanations, no extra text.
-
-        Example input: "bench press: 60x10, 65x8, 65x7 | squat: 100x5, 105x5"
-
-        Example output:
-        [{"exercise_name":"bench press","sets":[{"weight":60,"reps":10},{"weight":65,"reps":8},{"weight":65,"reps":7}]},{"exercise_name":"squat","sets":[{"weight":100,"reps":5},{"weight":105,"reps":5}]}]
-
+        Return ONLY valid JSON. No explanations.
         """
 
         prompt = [
@@ -122,11 +114,9 @@ def respond_node(state: AgentState) -> dict:
             reply = "Sorry, couldn't process that. Try again."
 
         workout_dict = state.get("workout", {})
-        workout_dict[workout_type] = {
-            "exercise_name": "",
-            "sets": [],
-            "raw_llm_response": response.content,
-        }
+
+        if workout_type == "weight_training" or workout_type == "cardio":
+            workout_dict[workout_type] = response.content
 
         return {
             "workout": workout_dict,
