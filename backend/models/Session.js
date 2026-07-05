@@ -11,6 +11,7 @@ const sessionSchema = new mongoose.Schema(
     workout: { type: mongoose.Schema.Types.Mixed, default: {} },
     chosenWorkoutType: { type: String, default: "" },
     others: { type: mongoose.Schema.Types.Mixed, default: {} },
+    chosenOthersType: { type: String, default: "" },
     dailyTotals: { type: mongoose.Schema.Types.Mixed, default: {} },
     messages: { type: [Object], default: [] },
     botReply: { type: String, default: "" },

@@ -24,6 +24,7 @@ class AgentState(TypedDict):
     workout: Dict[str, Any]
     chosen_workout_type: str
     others: Dict[str, Any]
+    chosen_others_type: str
 
     # ---computed---
     daily_totals: Dict[str, Any]
@@ -47,7 +48,7 @@ class AgentState(TypedDict):
         # Possible values: "idle" | "awaiting_category" | "awaiting_meal_type"
         # | "awaiting_meal_items" | "awaiting_workout_type"
         # | "awaiting_exercise_details" | "awaiting_others_category"
-        # | "awaiting_sleep" | "awaiting_water" | "awaiting_screen_time"
+        # | "awaiting_other_details"
         # | "report_generation"
 
         meals: {

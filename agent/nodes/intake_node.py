@@ -1,5 +1,3 @@
-from langchain_core import runnables
-
 from agent.state.agent_state import AgentState
 
 
@@ -54,6 +52,8 @@ def intake_node(state: AgentState) -> dict:
             "running",
         )
 
+        refined_user_text = ""
+
         if user_text in valid_weight_training_keywords:
             refined_user_text = "weight_training"
         if user_text in valid_cardio_keywords:
@@ -69,15 +69,6 @@ def intake_node(state: AgentState) -> dict:
             result["conversation_stage"] = "awaiting_exercise_details"
             result["chosen_workout_type"] = refined_user_text
 
-            if refined_user_text == "cardio":
-                result["bot_reply"] = (
-                    "Describe your exercise (workout name : total duration)"
-                )
-            else:
-                result["bot_reply"] = (
-                    "Describe your exercise (workout name : weight x reps, weight x reps, ... : total duration)"
-                )
-
             result["bot_reply"] = (
                 "Describe your exercise (workout name : total duration)"
                 if refined_user_text == "cardio"
@@ -92,17 +83,53 @@ def intake_node(state: AgentState) -> dict:
         return result
 
     if convo_stage == "awaiting_others_category":
-        if user_text in ("sleep", "water", "screen time", "screen"):
-            stage_map = {
-                "sleep": "awaiting_sleep",
-                "water": "awaiting_water",
-                "screen time": "awaiting_screen_time",
-                "screen": "awaiting_screen_time",
-            }
-            result["conversation_stage"] = stage_map.get(
-                user_text, "awaiting_others_category"
-            )
+        # refinign user input
+        valid_screen_time_keywords = ("screen time", "screen")
+        valid_sleep_keywords = ("sleep", "sleep duration", "sleep timing")
+        valid_water_keywords = (
+            "water",
+            "water intake",
+            "water amount",
+        )
+
+        refined_user_text = ""
+
+        if user_text in valid_screen_time_keywords:
+            refined_user_text = "screen_time"
+        if user_text in valid_sleep_keywords:
+            refined_user_text = "sleep"
+        if user_text in valid_water_keywords:
+            refined_user_text = "water"
+
+        if state.get("others", {}).get(refined_user_text):
+            result["bot_reply"] = f"{refined_user_text} already logged today ✅."
+            result["conversation_stage"] = "idle"
             return result
+
+        if (
+            refined_user_text == "screen_time"
+            or refined_user_text == "sleep"
+            or refined_user_text == "water"
+        ):
+            result["conversation_stage"] = "awaiting_other_details"
+            result["chosen_others_type"] = refined_user_text
+
+            if refined_user_text == "water":
+                result["bot_reply"] = (
+                    "How many glasses / bottle o water u have consumed total today ?"
+                )
+            if refined_user_text == "screen_time":
+                result["bot_reply"] = "What's your today's total mobile screen time ?"
+
+            if refined_user_text == "sleep":
+                result["bot_reply"] = "How many hours u have slept today ?"
+
+            return result
+
+        return result
+
+    if convo_stage == "awaiting_other_details":
+        return result
 
     if convo_stage == "report_generation":
         return result

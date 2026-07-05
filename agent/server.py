@@ -19,6 +19,7 @@ class ProcessRequest(BaseModel):
     workout: dict = {}
     chosen_workout_type: str = ""
     others: dict = {}
+    chosen_others_type: str = ""
     daily_totals: dict = {}
     messages: list = []
     bot_reply: str = ""

@@ -124,3 +124,64 @@ def respond_node(state: AgentState) -> dict:
             "conversation_stage": "idle",
             "messages": updated_response,
         }
+
+    if convo_stage == "awaiting_other_details":
+        user_input = state["user_input"]
+        other_type = state["chosen_others_type"]
+
+        others_parsing_prompt = """
+
+        Parse the user's input for {chosen_others_type} and return ONLY valid JSON.
+
+        If type is "water":
+        - Extract total glasses or liters
+        - If user says "8 glasses" → {"value": 8, "unit": "glasses"}
+        - If user says "2 liters" or "2l" → {"value": 2, "unit": "liters"}
+
+        If type is "screen_time":
+        - Extract total minutes
+        - If user says "2 hours" → {"value": 120, "unit": "minutes"}
+        - If user says "120" → {"value": 120, "unit": "minutes"}
+
+        If type is "sleep":
+        - Extract sleep timing
+        - Format: {"from": "23:00", "to": "06:00", "total_hours": 7}
+        - If user says "10pm to 6am" → {"from": "22:00", "to": "06:00"}
+        - If user says "11 PM - 6 AM" → {"from": "23:00", "to": "06:00"}
+
+        Return ONLY valid JSON. No explanations.
+
+        User input: {user_input}
+        """
+
+        prompt = [
+            SystemMessage(content=others_parsing_prompt),
+            HumanMessage(content=user_input),
+        ]
+
+        updated_response = messages
+
+        try:
+            response = llm.invoke(prompt)
+            reply = f"✅ {other_type} logged."
+            updated_response += [response]
+
+        except Exception as e:
+            print(f"DeepSeek error: {e}")
+            reply = "Sorry, couldn't process that. Try again."
+
+        others_dict = state.get("others", {})
+
+        if (
+            other_type == "sleep"
+            or other_type == "water"
+            or other_type == "screen_time"
+        ):
+            others_dict[other_type] = response.content
+
+        return {
+            "others": others_dict,
+            "bot_reply": reply,
+            "conversation_stage": "idle",
+            "messages": updated_response,
+        }
