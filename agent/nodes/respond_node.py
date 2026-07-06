@@ -1,3 +1,5 @@
+import json
+
 from langchain_core.messages import HumanMessage, SystemMessage
 
 from agent.llm.llm_client import llm
@@ -36,10 +38,28 @@ def respond_node(state: AgentState) -> dict:
 
         # if user has not entered anything like breakfast, lunch liek that , i.e. user have enter food names
         # now i have to call llm to calculate the macros
+        food_parsing_prompt = """
+        You are a nutrition tracker. Parse the given food items and return ONLY valid JSON.
+
+        Format:
+        {
+          "foods": [{"name": string, "quantity": number, "unit": string}],
+          "macros": {"protein": number, "carbs": number, "fat": number, "calories": number}
+        }
+
+        Rules:
+        - Estimate macros for each food item first
+        - Sum them to get total macros
+        - Include fiber if applicable (optional)
+
+        Example input: "3 eggs, 2 roti"
+        Example output: {"foods": [{"name":"eggs","quantity":3,"unit":"whole"},{"name":"roti","quantity":2,"unit":"pieces"}], "macros": {"protein":24,"carbs":30,"fat":15,"calories":350}}
+
+        Return ONLY valid JSON. No explanations. No tables. No markdown.
+
+        """
         prompt = [
-            SystemMessage(
-                content="You are a certified and experienced nutrition tracker. Parse the food items and estimate macros."
-            ),
+            SystemMessage(content=food_parsing_prompt),
             HumanMessage(content=user_input),
         ]
         try:
@@ -57,13 +77,13 @@ def respond_node(state: AgentState) -> dict:
 
         meals_dict = state.get("meals", {})
 
-        parsed_foods = []
-        parsed_macros = {}
+        parsed = json.loads(response.content)
+        parsed_foods = parsed["foods"]
+        parsed_macros = parsed["macros"]
 
         meals_dict[meal_type] = {
-            "foods": [],
-            "macros": {},
-            "raw_llm_response": response.content,
+            "foods": parsed_foods,
+            "macros": parsed_macros,
         }
 
         return {
