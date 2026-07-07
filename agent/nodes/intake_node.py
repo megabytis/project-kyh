@@ -116,7 +116,7 @@ def intake_node(state: AgentState) -> dict:
 
             if refined_user_text == "water":
                 result["bot_reply"] = (
-                    "How many glasses / bottle o water u have consumed total today ?"
+                    "How many glasses / bottle of water u have consumed total today ?"
                 )
             if refined_user_text == "screen_time":
                 result["bot_reply"] = "What's your today's total mobile screen time ?"

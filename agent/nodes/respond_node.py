@@ -135,8 +135,10 @@ def respond_node(state: AgentState) -> dict:
 
         workout_dict = state.get("workout", {})
 
+        parsed = json.loads(response.content)
+
         if workout_type == "weight_training" or workout_type == "cardio":
-            workout_dict[workout_type] = response.content
+            workout_dict[workout_type] = parsed
 
         return {
             "workout": workout_dict,
@@ -192,12 +194,14 @@ def respond_node(state: AgentState) -> dict:
 
         others_dict = state.get("others", {})
 
+        parsed_others = json.loads(response.content)
+
         if (
             other_type == "sleep"
             or other_type == "water"
             or other_type == "screen_time"
         ):
-            others_dict[other_type] = response.content
+            others_dict[other_type] = parsed_others
 
         return {
             "others": others_dict,
@@ -205,3 +209,6 @@ def respond_node(state: AgentState) -> dict:
             "conversation_stage": "idle",
             "messages": updated_response,
         }
+
+    if convo_stage == "report_generation":
+        return {}
