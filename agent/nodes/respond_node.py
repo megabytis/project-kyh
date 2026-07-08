@@ -21,7 +21,6 @@ def respond_node(state: AgentState) -> dict:
         "awaiting_meal_type": "Which meal? 🌅 Breakfast, ☀️ Lunch, 🌙 Dinner, 🍪Snacks",
         "awaiting_workout_type": "Cardio or 🏋️ Weight training?",
         "awaiting_others_category": "What to log? 😴 Sleep, 💧 Water, 📱 Screen time",
-        "report_generation": "Report coming soon! keep logging daily.",
     }
 
     if convo_stage in stage_specific_replies:

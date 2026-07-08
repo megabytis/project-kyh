@@ -35,7 +35,7 @@ def daily_summary_node(state: AgentState) -> dict:
     water_intake = state.get("others", {}).get("water", {}).get("value")
     sleep_hours = state.get("others", {}).get("sleep", {}).get("total_hours")
 
-    daily_total = {
+    daily_totals = {
         "protein": protein,
         "carbs": carbs,
         "fat": fat,
@@ -47,6 +47,7 @@ def daily_summary_node(state: AgentState) -> dict:
     }
 
     # now storing everything in dailytotal of state
-    state["daily_totals"] = daily_total
+    state["daily_totals"] = daily_totals
+    state["summary_generated"] = True
 
     return state

@@ -61,9 +61,12 @@ def feedback_node(state: AgentState) -> dict:
 
     # for sleep
     sleep = ""
-    if daily_totals["sleep"] >= 6 and daily_totals["sleep"] <= TARGETS["sleep"]:
+    if (
+        daily_totals["sleep_hours"] >= 6
+        and daily_totals["sleep_hours"] <= TARGETS["sleep"]
+    ):
         sleep.join("sleep: ✅ good")
-    elif daily_totals["sleep"] > TARGETS["sleep"]:
+    elif daily_totals["sleep_hours"] > TARGETS["sleep"]:
         sleep.join("sleep: ⚠️ too much")
     else:
         sleep.join("sleep: ❌ too little")
