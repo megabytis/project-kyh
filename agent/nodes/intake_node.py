@@ -10,11 +10,23 @@ def intake_node(state: AgentState) -> dict:
     result = {"bot_reply": ""}
 
     if convo_stage in ("idle", "awaiting_category"):
+        if user_text in ("summary", "report", "daily summary", "daily report"):
+            if state.get("summary_generated", False):
+                result["bot_reply"] = "Summary already generated for today ✅"
+                result["conversation_stage"] = "idle"
+                return result
+            else:
+                result["conversation_stage"] = "report_generation"
+                return result
+
         mapping_user_input = {
             "food": "awaiting_meal_type",
             "workout": "awaiting_workout_type",
             "others": "awaiting_others_category",
             "report": "report_generation",
+            "summary": "report_generation",
+            "daily summary": "report_generation",
+            "daily report": "report_generation",
         }
         new_convo_stage = mapping_user_input.get(user_text, "awaiting_category")
         result["conversation_stage"] = new_convo_stage
