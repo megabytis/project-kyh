@@ -26,6 +26,7 @@ class ProcessRequest(BaseModel):
     feedback: str = ""
     plan: str = ""
     weekly_report: str = ""
+    summary_generated: bool = False
 
 
 @app.post("/process")

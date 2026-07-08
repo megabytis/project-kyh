@@ -17,6 +17,7 @@ const sessionSchema = new mongoose.Schema(
     botReply: { type: String, default: "" },
     feedback: { type: String, default: "" },
     plan: { type: String, default: "" },
+    summaryGenerated: { type: Boolean, default: false },
   },
   { timestamps: true },
 );

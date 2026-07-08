@@ -43,6 +43,7 @@ export const handleChat = async (req, res) => {
       feedback: session.feedback,
       plan: session.plan,
       weekly_report: "",
+      summary_generated: session.summaryGenerated || false,
     };
 
     delete state._id;
@@ -71,6 +72,7 @@ export const handleChat = async (req, res) => {
       botReply: result.bot_reply || "",
       feedback: result.feedback || "",
       plan: result.plan || "",
+      summaryGenerated: result.summary_generated || false,
     });
     await session.save();
 

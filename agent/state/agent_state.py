@@ -33,6 +33,7 @@ class AgentState(TypedDict):
     feedback: str
     plan: str
     weekly_report: str
+    summary_generated: bool
 
 
 """
