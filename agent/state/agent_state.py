@@ -35,6 +35,10 @@ class AgentState(TypedDict):
     weekly_report: str
     summary_generated: bool
 
+    # ---Weekly Analysis---
+    sessions: list
+    weekly_summary: dict
+
 
 """
         Example data for each field :
