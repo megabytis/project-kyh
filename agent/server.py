@@ -3,6 +3,8 @@ from fastapi import FastAPI
 from graph.graph import graph
 from pydantic import BaseModel
 
+from agent.graph.subgraphs.weekly_graph import weekly_graph
+
 app = FastAPI(title="KYH Agent")
 
 
@@ -33,6 +35,19 @@ class ProcessRequest(BaseModel):
 async def process(req: ProcessRequest):
     state = req.model_dump()  # so here it is ensuring and checkign wheather our input feild data type matching with pydantic class feild's datatype or not, if yes then pass it else throw error, but witout this also we can directly pass our input dict to graph , but this is more SECURE.
     result = await graph.ainvoke(state)
+    return result
+
+
+class AnalyzeRequest(BaseModel):
+    sessions: list = []
+    weekly_summary: dict = {}
+    weekly_report: str = ""
+
+
+@app.post("/analyze")
+async def analyze(req: AnalyzeRequest):
+    state = req.model_dump()
+    result = await weekly_graph.ainvoke(state)
     return result
 
 
