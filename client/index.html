@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>KYH — Know Your Habit Dashboard</title>
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="style.css?v=5">
+</head>
+<body>
+  <!-- Ambient background glow elements -->
+  <div class="ambient-glow glow-1"></div>
+  <div class="ambient-glow glow-2"></div>
+  <div class="ambient-glow glow-3"></div>
+
+  <div class="app-container">
+    
+    <!-- LEFT PANEL: Chat Console -->
+    <section class="chat-panel card">
+      <header class="chat-header">
+        <div class="bot-avatar">
+          <i class="fa-solid fa-robot"></i>
+          <span class="status-indicator online"></span>
+        </div>
+        <div class="header-info">
+          <h1>KYH Fitness Agent</h1>
+          <p>LangGraph Agentic Memory Engine</p>
+        </div>
+        <button id="clear-convo-btn" title="Reset Conversation State" class="header-action-btn">
+          <i class="fa-solid fa-rotate-left"></i>
+        </button>
+      </header>
+
+      <!-- Messages Area -->
+      <div class="messages-container" id="chat-messages">
+        <!-- Messages will be injected here -->
+        <div class="message system">
+          <div class="message-content">
+            <p>Welcome to KYH (Know Your Habit). Enter your User ID on the right console to load your profile, or chat below to start logging immediately.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quick Reply Action Chips -->
+      <div class="quick-replies-container" id="quick-replies">
+        <!-- Quick action buttons will be injected here depending on the conversation stage -->
+      </div>
+
+      <!-- Message Input Form -->
+      <form class="chat-input-area" id="chat-form">
+        <input type="text" id="chat-input" placeholder="Say 'food', 'workout', 'others', or write what you did..." required autocomplete="off">
+        <button type="submit" id="send-btn" title="Send Message">
+          <i class="fa-solid fa-paper-plane"></i>
+        </button>
+      </form>
+    </section>
+
+    <!-- RIGHT PANEL: Dashboard Grid -->
+    <main class="dashboard-panel">
+      
+      <!-- Top Bar: User ID Configuration & General Summary triggers -->
+      <header class="dashboard-header card">
+        <div class="user-config">
+          <label for="user-id-input"><i class="fa-solid fa-user-gear"></i> User ID:</label>
+          <div class="input-wrapper">
+            <input type="text" id="user-id-input" value="" placeholder="e.g. user_abc123">
+            <button id="load-user-btn" class="btn btn-secondary">Sync</button>
+          </div>
+          <span class="sync-status" id="sync-status"><i class="fa-solid fa-circle-check"></i> Connected</span>
+        </div>
+
+        <div class="header-actions">
+          <button id="trigger-summary-btn" class="btn btn-primary" title="Trigger Daily Summary Calculation">
+            <i class="fa-solid fa-calculator"></i> Daily Summary
+          </button>
+          <button id="show-weekly-report-btn" class="btn btn-accent" title="View Weekly Analysis Report">
+            <i class="fa-solid fa-chart-line"></i> Weekly Report
+          </button>
+        </div>
+      </header>
+
+      <!-- Dashboard Grid Content -->
+      <div class="dashboard-grid">
+        
+        <!-- MACRONUTRIENTS SECTION (Card) -->
+        <section class="dashboard-card card macros-card">
+          <h2><i class="fa-solid fa-fire-flame-curved"></i> Daily Macronutrients</h2>
+          <div class="macros-grid">
+            <!-- Calories Circle Progress -->
+            <div class="macro-circle-container">
+              <div class="circular-progress" id="calories-progress" style="--percent: 0; --color: var(--color-calories);">
+                <div class="inner-value">
+                  <span id="calories-val">0</span>
+                  <span class="unit">kcal</span>
+                </div>
+              </div>
+              <span class="macro-label">Calories</span>
+              <span class="macro-target">Goal: 2000 cal</span>
+            </div>
+
+            <!-- Macro Bars -->
+            <div class="macro-bars-container">
+              
+              <!-- Protein -->
+              <div class="macro-bar-item">
+                <div class="bar-header">
+                  <span>Protein</span>
+                  <span class="bar-values"><strong id="protein-val">0</strong>g / 110g</span>
+                </div>
+                <div class="progress-bar-bg">
+                  <div class="progress-bar-fill" id="protein-bar" style="width: 0%; background: var(--color-protein);"></div>
+                </div>
+              </div>
+
+              <!-- Carbs -->
+              <div class="macro-bar-item">
+                <div class="bar-header">
+                  <span>Carbs</span>
+                  <span class="bar-values"><strong id="carbs-val">0</strong>g / 200g</span>
+                </div>
+                <div class="progress-bar-bg">
+                  <div class="progress-bar-fill" id="carbs-bar" style="width: 0%; background: var(--color-carbs);"></div>
+                </div>
+              </div>
+
+              <!-- Fat -->
+              <div class="macro-bar-item">
+                <div class="bar-header">
+                  <span>Fats</span>
+                  <span class="bar-values"><strong id="fat-val">0</strong>g / 60g</span>
+                </div>
+                <div class="progress-bar-bg">
+                  <div class="progress-bar-fill" id="fat-bar" style="width: 0%; background: var(--color-fat);"></div>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </section>
+
+        <!-- LIFESTYLE METRICS SECTION -->
+        <section class="dashboard-card card lifestyle-card">
+          <h2><i class="fa-solid fa-heart-pulse"></i> Sleep & Hydration</h2>
+          <div class="lifestyle-grid">
+            <div class="metric-tile sleep-tile">
+              <div class="tile-icon"><i class="fa-solid fa-moon"></i></div>
+              <div class="tile-info">
+                <h3>Sleep</h3>
+                <div class="tile-value"><span id="sleep-val">0</span> <span class="unit">hrs</span></div>
+                <span class="tile-status" id="sleep-status">Target: 7 hrs</span>
+              </div>
+            </div>
+
+            <div class="metric-tile water-tile">
+              <div class="tile-icon"><i class="fa-solid fa-droplet"></i></div>
+              <div class="tile-info">
+                <h3>Water</h3>
+                <div class="tile-value"><span id="water-val">0</span> <span class="unit">L</span></div>
+                <span class="tile-status" id="water-status">Target: 4 L</span>
+              </div>
+            </div>
+
+            <div class="metric-tile screen-tile">
+              <div class="tile-icon"><i class="fa-solid fa-mobile-screen-button"></i></div>
+              <div class="tile-info">
+                <h3>Screen Time</h3>
+                <div class="tile-value"><span id="screen-val">0</span> <span class="unit">min</span></div>
+                <span class="tile-status" id="screen-status">Limit: Under 180 min</span>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- WORKOUT VOLUME SECTION -->
+        <section class="dashboard-card card workout-card">
+          <h2><i class="fa-solid fa-dumbbell"></i> Workout Logs</h2>
+          <div class="workout-grid">
+            <div class="workout-metric">
+              <div class="metric-circle" style="--color: var(--color-workout);">
+                <i class="fa-solid fa-weight-hanging"></i>
+                <div class="metric-circle-info">
+                  <span class="value" id="workout-volume-val">0</span>
+                  <span class="unit">kg</span>
+                </div>
+              </div>
+              <span class="label">Total Weight Lifted</span>
+            </div>
+
+            <div class="workout-metric">
+              <div class="metric-circle" style="--color: var(--color-cardio);">
+                <i class="fa-solid fa-person-running"></i>
+                <div class="metric-circle-info">
+                  <span class="value" id="cardio-duration-val">0</span>
+                  <span class="unit">min</span>
+                </div>
+              </div>
+              <span class="label">Cardio Duration</span>
+            </div>
+          </div>
+          <!-- Logged Details List -->
+          <div class="workout-details-list">
+            <h3>Registered Details</h3>
+            <div id="workout-details-container" class="details-placeholder">
+              No workout exercises logged today yet.
+            </div>
+          </div>
+        </section>
+
+        <!-- MEALS DETAILS LIST SECTION -->
+        <section class="dashboard-card card meals-list-card">
+          <h2><i class="fa-solid fa-utensils"></i> Meals Registered</h2>
+          <div class="meals-details-container" id="meals-details-container">
+            <div class="details-placeholder">No food meals logged today yet.</div>
+          </div>
+        </section>
+
+      </div>
+
+      <!-- AI COACH INSIGHTS SECTION -->
+      <section class="insights-panel">
+        <div class="insights-grid">
+          
+          <!-- Daily Feedback Card -->
+          <div class="insight-card feedback-card card">
+            <div class="card-icon"><i class="fa-solid fa-comment-dots"></i></div>
+            <div class="card-content">
+              <h3>Daily AI Feedback</h3>
+              <p id="feedback-text">Complete logging your day and click <strong>Daily Summary</strong> to get personalized coaching feedback from your LangGraph AI.</p>
+            </div>
+          </div>
+
+          <!-- Tomorrow's Plan Card -->
+          <div class="insight-card plan-card card">
+            <div class="card-icon"><i class="fa-solid fa-calendar-day"></i></div>
+            <div class="card-content">
+              <h3>Tomorrow's Strategy</h3>
+              <p id="plan-text">Your target plan will appear here after the daily summary completes.</p>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <!-- WEEKLY REPORT MODAL OVERLAY -->
+  <div class="modal-overlay" id="weekly-modal">
+    <div class="modal card">
+      <header class="modal-header">
+        <h2><i class="fa-solid fa-chart-line"></i> Weekly Analytics Report</h2>
+        <button class="close-btn" id="close-weekly-btn">&times;</button>
+      </header>
+      <div class="modal-body" id="weekly-report-body">
+        
+        <!-- Summary Numbers Grid -->
+        <div class="weekly-metrics-grid">
+          <div class="weekly-metric-box">
+            <span class="val" id="weekly-days-logged">0/7</span>
+            <span class="lbl">Days Analyzed</span>
+          </div>
+          <div class="weekly-metric-box">
+            <span class="val"><span id="weekly-avg-protein">0</span>g</span>
+            <span class="lbl">Avg Protein</span>
+          </div>
+          <div class="weekly-metric-box">
+            <span class="val"><span id="weekly-avg-calories">0</span></span>
+            <span class="lbl">Avg Calories</span>
+          </div>
+          <div class="weekly-metric-box">
+            <span class="val"><span id="weekly-avg-sleep">0</span>h</span>
+            <span class="lbl">Avg Sleep</span>
+          </div>
+          <div class="weekly-metric-box">
+            <span class="val"><span id="weekly-avg-water">0</span>L</span>
+            <span class="lbl">Avg Water</span>
+          </div>
+        </div>
+
+        <!-- Weekly Summary Analysis from LLM -->
+        <div class="report-content-box">
+          <h3>Coach Analysis & Advice</h3>
+          <div class="markdown-body" id="weekly-analysis-text">
+            Generating report, please wait...
+          </div>
+        </div>
+
+        <!-- Patterns Table/Visual list -->
+        <div class="patterns-container">
+          <h3>Consistency Trackers</h3>
+          <ul class="patterns-list" id="weekly-patterns-list">
+            <!-- Pattern check marks will show here -->
+          </ul>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

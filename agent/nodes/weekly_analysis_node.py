@@ -34,14 +34,15 @@ def weekly_analysis_node(state: AgentState) -> dict:
         date = session.get("date")
 
         # Meals - sum macros from all meals
-        meals = session.get("meals", {})
+        meals = session.get("meals") or {}
         macros = protein = carbs = fat = calories = 0
         for meal_type, meal_data in meals.items():
-            macros = meal_data.get("macros", {})
-            protein += macros.get("protein", 0)
-            carbs += macros.get("carbs", 0)
-            fat += macros.get("fat", 0)
-            calories += macros.get("calories", 0)
+            if meal_data:
+                m_macros = meal_data.get("macros") or {}
+                protein += m_macros.get("protein") or 0
+                carbs += m_macros.get("carbs") or 0
+                fat += m_macros.get("fat") or 0
+                calories += m_macros.get("calories") or 0
 
         total_protein += protein
         total_carbs += carbs
@@ -49,27 +50,34 @@ def weekly_analysis_node(state: AgentState) -> dict:
         total_calories += calories
 
         # Workout
-        workout = session.get("workout", {})
-        workout_days = 0
+        workout = session.get("workout") or {}
         if workout.get("weight_training") or workout.get("cardio"):
             workout_days += 1
         else:
             days_missing_workout.append(date)
 
         # ======= OTHERS =========
-        others = session.get("others", {})
+        others = session.get("others") or {}
 
         # Water
-        if others.get("water", {}):
+        water_data = others.get("water")
+        if water_data and isinstance(water_data, dict):
             water_days += 1
-            water_total += others["water"].get("value", 0)
+            water_total += water_data.get("value") or 0
+        elif isinstance(water_data, (int, float)):
+            water_days += 1
+            water_total += water_data
         else:
             days_missing_water.append(date)
 
         # Sleep
-        if others.get("sleep"):
+        sleep_data = others.get("sleep")
+        if sleep_data and isinstance(sleep_data, dict):
             sleep_days += 1
-            sleep_total += others["sleep"].get("total_hours", 0)
+            sleep_total += sleep_data.get("total_hours") or sleep_data.get("value") or 0
+        elif isinstance(sleep_data, (int, float)):
+            sleep_days += 1
+            sleep_total += sleep_data
         else:
             days_missing_sleep.append(date)
 

@@ -80,6 +80,7 @@ export const handleChat = async (req, res) => {
     res.json({
       reply: session.botReply,
       stage: session.conversationStage,
+      session: session,
     });
   } catch (error) {
     console.error("Chat error:", error.message);

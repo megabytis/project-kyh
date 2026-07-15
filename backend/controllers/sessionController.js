@@ -21,6 +21,7 @@ export const initSession = async (req, res) => {
       sessionId: session._id,
       stage: session.conversationStage,
       loggedMeals: session.loggedMeals,
+      session: session,
     });
   } catch (err) {
     console.log("Session init error:", err.message);

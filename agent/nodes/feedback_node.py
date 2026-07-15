@@ -54,19 +54,18 @@ def feedback_node(state: AgentState) -> dict:
 
     # for water
     water = ""
-    if daily_totals["water"] >= TARGETS["water"]:
+    water_value = daily_totals.get("water", 0)
+    if water_value is not None and water_value >= TARGETS["water"]:
         water.join("water: ✅ good")
     else:
         water.join("water: ❌ low")
 
     # for sleep
     sleep = ""
-    if (
-        daily_totals["sleep_hours"] >= 6
-        and daily_totals["sleep_hours"] <= TARGETS["sleep"]
-    ):
+    sleep_value = daily_totals.get("sleep_hours", 0)
+    if sleep_value is not None and sleep_value >= 6 and sleep_value <= TARGETS["sleep"]:
         sleep.join("sleep: ✅ good")
-    elif daily_totals["sleep_hours"] > TARGETS["sleep"]:
+    elif sleep_value is not None and sleep_value > TARGETS["sleep"]:
         sleep.join("sleep: ⚠️ too much")
     else:
         sleep.join("sleep: ❌ too little")

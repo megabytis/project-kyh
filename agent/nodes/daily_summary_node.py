@@ -6,34 +6,42 @@ def daily_summary_node(state: AgentState) -> dict:
     protein = carbs = fat = calories = 0
 
     # Extracting all macros from all meals
-    meals = state.get("meals")
+    meals = state.get("meals") or {}
     for meal_data in meals.values():
-        m = meal_data.get("macros", {})
-        protein += m.get("protein", 0)
-        carbs += m.get("carbs", 0)
-        fat += m.get("fat", 0)
-        calories += m.get("calories", 0)
+        if meal_data:
+            m = meal_data.get("macros") or {}
+            protein += m.get("protein") or 0
+            carbs += m.get("carbs") or 0
+            fat += m.get("fat") or 0
+            calories += m.get("calories") or 0
 
     # ============ WEIGHT TRAINING TOTAL VOLUME =============
     workout_volume = 0
 
-    weight_training = state.get("workout", {}).get("weight_training", [])
+    workout_data = state.get("workout") or {}
+    weight_training = workout_data.get("weight_training") or []
     for workout in weight_training:
-        for s in workout.get("sets", []):
-            weight = s.get("weight", 0)
-            reps = s.get("reps", 0)
-            workout_volume += weight * reps
+        if workout:
+            for s in workout.get("sets") or []:
+                weight = s.get("weight") or 0
+                reps = s.get("reps") or 0
+                workout_volume += weight * reps
 
     # ============= CARDIO TOTAL DURATION =================
     total_cardio_duration = 0
 
-    cardio_list = state.get("workout", {}).get("cardio", [])
+    cardio_list = workout_data.get("cardio") or []
     for cardio in cardio_list:
-        total_cardio_duration += cardio.get("duration", 0)
+        if cardio:
+            total_cardio_duration += cardio.get("duration") or 0
 
     # =========== OTHERS ============
-    water_intake = state.get("others", {}).get("water", {}).get("value")
-    sleep_hours = state.get("others", {}).get("sleep", {}).get("total_hours")
+    others_data = state.get("others") or {}
+    water_data = others_data.get("water") or {}
+    water_intake = water_data.get("value") if isinstance(water_data, dict) else water_data
+    
+    sleep_data = others_data.get("sleep") or {}
+    sleep_hours = sleep_data.get("total_hours") if isinstance(sleep_data, dict) else None
 
     daily_totals = {
         "protein": protein,
