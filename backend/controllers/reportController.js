@@ -21,7 +21,7 @@ export const getWeeklyReport = async (req, res) => {
         timeout: 30000,
       },
     );
-    res.join(analysis.data);
+    res.status(200).json(analysis.data);
   } catch (error) {
     console.error("Weekly report error:", error.message);
     res.status(500).json({ error: "Failed to generate weekly report" });
