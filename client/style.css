@@ -523,9 +523,17 @@ body {
 }
 
 /* Dashboard Grid Structure */
-.dashboard-grid {
+/* Dashboard columns layout — each column flows independently */
+.dashboard-cols {
   display: grid;
   grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  align-items: start;
+}
+
+.dashboard-col {
+  display: flex;
+  flex-direction: column;
   gap: 20px;
 }
 
@@ -868,7 +876,6 @@ body {
   display: flex;
   flex-direction: column;
   gap: 10px;
-  max-height: 280px;
   overflow-y: auto;
 }
 
@@ -1198,7 +1205,7 @@ body {
 }
 
 @media (max-width: 768px) {
-  .dashboard-grid {
+  .dashboard-cols {
     grid-template-columns: 1fr;
   }
   

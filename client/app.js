@@ -2,7 +2,7 @@
    KYH Client Application Logic — Dashboard Integrations & Convo Flow
    ========================================================================== */
 
-const API_BASE = window.location.origin;
+const API_BASE = "http://localhost:3000";
 
 // Application State
 let userId = "";

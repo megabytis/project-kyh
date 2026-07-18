@@ -53,7 +53,7 @@ export const handleChat = async (req, res) => {
 
     // now sending state to FastAPI endpoint
     const response = await axios.post(`${FASTAPI_URL}/process`, state, {
-      timeout: 30000,
+      timeout: 120000,
     });
     const result = response.data;
 

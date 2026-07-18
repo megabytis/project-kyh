@@ -10,7 +10,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <!-- FontAwesome Icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <link rel="stylesheet" href="style.css?v=5">
+  <link rel="stylesheet" href="style.css?v=6">
 </head>
 <body>
   <!-- Ambient background glow elements -->
@@ -84,170 +84,161 @@
         </div>
       </header>
 
-      <!-- Dashboard Grid Content -->
-      <div class="dashboard-grid">
-        
-        <!-- MACRONUTRIENTS SECTION (Card) -->
-        <section class="dashboard-card card macros-card">
-          <h2><i class="fa-solid fa-fire-flame-curved"></i> Daily Macronutrients</h2>
-          <div class="macros-grid">
-            <!-- Calories Circle Progress -->
-            <div class="macro-circle-container">
-              <div class="circular-progress" id="calories-progress" style="--percent: 0; --color: var(--color-calories);">
-                <div class="inner-value">
-                  <span id="calories-val">0</span>
-                  <span class="unit">kcal</span>
+      <!-- Dashboard 2-column layout -->
+      <div class="dashboard-cols">
+
+        <!-- LEFT COLUMN -->
+        <div class="dashboard-col">
+
+          <!-- MACRONUTRIENTS SECTION -->
+          <section class="dashboard-card card macros-card">
+            <h2><i class="fa-solid fa-fire-flame-curved"></i> Daily Macronutrients</h2>
+            <div class="macros-grid">
+              <div class="macro-circle-container">
+                <div class="circular-progress" id="calories-progress" style="--percent: 0; --color: var(--color-calories);">
+                  <div class="inner-value">
+                    <span id="calories-val">0</span>
+                    <span class="unit">kcal</span>
+                  </div>
+                </div>
+                <span class="macro-label">Calories</span>
+                <span class="macro-target">Goal: 2000 cal</span>
+              </div>
+              <div class="macro-bars-container">
+                <div class="macro-bar-item">
+                  <div class="bar-header">
+                    <span>Protein</span>
+                    <span class="bar-values"><strong id="protein-val">0</strong>g / 110g</span>
+                  </div>
+                  <div class="progress-bar-bg">
+                    <div class="progress-bar-fill" id="protein-bar" style="width: 0%; background: var(--color-protein);"></div>
+                  </div>
+                </div>
+                <div class="macro-bar-item">
+                  <div class="bar-header">
+                    <span>Carbs</span>
+                    <span class="bar-values"><strong id="carbs-val">0</strong>g / 200g</span>
+                  </div>
+                  <div class="progress-bar-bg">
+                    <div class="progress-bar-fill" id="carbs-bar" style="width: 0%; background: var(--color-carbs);"></div>
+                  </div>
+                </div>
+                <div class="macro-bar-item">
+                  <div class="bar-header">
+                    <span>Fats</span>
+                    <span class="bar-values"><strong id="fat-val">0</strong>g / 60g</span>
+                  </div>
+                  <div class="progress-bar-bg">
+                    <div class="progress-bar-fill" id="fat-bar" style="width: 0%; background: var(--color-fat);"></div>
+                  </div>
                 </div>
               </div>
-              <span class="macro-label">Calories</span>
-              <span class="macro-target">Goal: 2000 cal</span>
             </div>
+          </section>
 
-            <!-- Macro Bars -->
-            <div class="macro-bars-container">
-              
-              <!-- Protein -->
-              <div class="macro-bar-item">
-                <div class="bar-header">
-                  <span>Protein</span>
-                  <span class="bar-values"><strong id="protein-val">0</strong>g / 110g</span>
+          <!-- WORKOUT SECTION -->
+          <section class="dashboard-card card workout-card">
+            <h2><i class="fa-solid fa-dumbbell"></i> Workout Logs</h2>
+            <div class="workout-grid">
+              <div class="workout-metric">
+                <div class="metric-circle" style="--color: var(--color-workout);">
+                  <i class="fa-solid fa-weight-hanging"></i>
+                  <div class="metric-circle-info">
+                    <span class="value" id="workout-volume-val">0</span>
+                    <span class="unit">kg</span>
+                  </div>
                 </div>
-                <div class="progress-bar-bg">
-                  <div class="progress-bar-fill" id="protein-bar" style="width: 0%; background: var(--color-protein);"></div>
-                </div>
+                <span class="label">Total Weight Lifted</span>
               </div>
-
-              <!-- Carbs -->
-              <div class="macro-bar-item">
-                <div class="bar-header">
-                  <span>Carbs</span>
-                  <span class="bar-values"><strong id="carbs-val">0</strong>g / 200g</span>
+              <div class="workout-metric">
+                <div class="metric-circle" style="--color: var(--color-cardio);">
+                  <i class="fa-solid fa-person-running"></i>
+                  <div class="metric-circle-info">
+                    <span class="value" id="cardio-duration-val">0</span>
+                    <span class="unit">min</span>
+                  </div>
                 </div>
-                <div class="progress-bar-bg">
-                  <div class="progress-bar-fill" id="carbs-bar" style="width: 0%; background: var(--color-carbs);"></div>
-                </div>
-              </div>
-
-              <!-- Fat -->
-              <div class="macro-bar-item">
-                <div class="bar-header">
-                  <span>Fats</span>
-                  <span class="bar-values"><strong id="fat-val">0</strong>g / 60g</span>
-                </div>
-                <div class="progress-bar-bg">
-                  <div class="progress-bar-fill" id="fat-bar" style="width: 0%; background: var(--color-fat);"></div>
-                </div>
-              </div>
-
-            </div>
-          </div>
-        </section>
-
-        <!-- LIFESTYLE METRICS SECTION -->
-        <section class="dashboard-card card lifestyle-card">
-          <h2><i class="fa-solid fa-heart-pulse"></i> Sleep & Hydration</h2>
-          <div class="lifestyle-grid">
-            <div class="metric-tile sleep-tile">
-              <div class="tile-icon"><i class="fa-solid fa-moon"></i></div>
-              <div class="tile-info">
-                <h3>Sleep</h3>
-                <div class="tile-value"><span id="sleep-val">0</span> <span class="unit">hrs</span></div>
-                <span class="tile-status" id="sleep-status">Target: 7 hrs</span>
+                <span class="label">Cardio Duration</span>
               </div>
             </div>
-
-            <div class="metric-tile water-tile">
-              <div class="tile-icon"><i class="fa-solid fa-droplet"></i></div>
-              <div class="tile-info">
-                <h3>Water</h3>
-                <div class="tile-value"><span id="water-val">0</span> <span class="unit">L</span></div>
-                <span class="tile-status" id="water-status">Target: 4 L</span>
+            <div class="workout-details-list">
+              <h3>Registered Details</h3>
+              <div id="workout-details-container" class="details-placeholder">
+                No workout exercises logged today yet.
               </div>
             </div>
+          </section>
 
-            <div class="metric-tile screen-tile">
-              <div class="tile-icon"><i class="fa-solid fa-mobile-screen-button"></i></div>
-              <div class="tile-info">
-                <h3>Screen Time</h3>
-                <div class="tile-value"><span id="screen-val">0</span> <span class="unit">min</span></div>
-                <span class="tile-status" id="screen-status">Limit: Under 180 min</span>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        <!-- WORKOUT VOLUME SECTION -->
-        <section class="dashboard-card card workout-card">
-          <h2><i class="fa-solid fa-dumbbell"></i> Workout Logs</h2>
-          <div class="workout-grid">
-            <div class="workout-metric">
-              <div class="metric-circle" style="--color: var(--color-workout);">
-                <i class="fa-solid fa-weight-hanging"></i>
-                <div class="metric-circle-info">
-                  <span class="value" id="workout-volume-val">0</span>
-                  <span class="unit">kg</span>
+          <!-- AI COACH INSIGHTS -->
+          <section class="insights-panel">
+            <div class="insights-grid">
+              <div class="insight-card feedback-card card">
+                <div class="card-icon"><i class="fa-solid fa-comment-dots"></i></div>
+                <div class="card-content">
+                  <h3>Daily AI Feedback</h3>
+                  <p id="feedback-text">Complete logging your day and click <strong>Daily Summary</strong> to get personalized coaching feedback from your LangGraph AI.</p>
                 </div>
               </div>
-              <span class="label">Total Weight Lifted</span>
-            </div>
-
-            <div class="workout-metric">
-              <div class="metric-circle" style="--color: var(--color-cardio);">
-                <i class="fa-solid fa-person-running"></i>
-                <div class="metric-circle-info">
-                  <span class="value" id="cardio-duration-val">0</span>
-                  <span class="unit">min</span>
+              <div class="insight-card plan-card card">
+                <div class="card-icon"><i class="fa-solid fa-calendar-day"></i></div>
+                <div class="card-content">
+                  <h3>Tomorrow's Strategy</h3>
+                  <p id="plan-text">Your target plan will appear here after the daily summary completes.</p>
                 </div>
               </div>
-              <span class="label">Cardio Duration</span>
             </div>
-          </div>
-          <!-- Logged Details List -->
-          <div class="workout-details-list">
-            <h3>Registered Details</h3>
-            <div id="workout-details-container" class="details-placeholder">
-              No workout exercises logged today yet.
-            </div>
-          </div>
-        </section>
-
-        <!-- MEALS DETAILS LIST SECTION -->
-        <section class="dashboard-card card meals-list-card">
-          <h2><i class="fa-solid fa-utensils"></i> Meals Registered</h2>
-          <div class="meals-details-container" id="meals-details-container">
-            <div class="details-placeholder">No food meals logged today yet.</div>
-          </div>
-        </section>
-
-      </div>
-
-      <!-- AI COACH INSIGHTS SECTION -->
-      <section class="insights-panel">
-        <div class="insights-grid">
-          
-          <!-- Daily Feedback Card -->
-          <div class="insight-card feedback-card card">
-            <div class="card-icon"><i class="fa-solid fa-comment-dots"></i></div>
-            <div class="card-content">
-              <h3>Daily AI Feedback</h3>
-              <p id="feedback-text">Complete logging your day and click <strong>Daily Summary</strong> to get personalized coaching feedback from your LangGraph AI.</p>
-            </div>
-          </div>
-
-          <!-- Tomorrow's Plan Card -->
-          <div class="insight-card plan-card card">
-            <div class="card-icon"><i class="fa-solid fa-calendar-day"></i></div>
-            <div class="card-content">
-              <h3>Tomorrow's Strategy</h3>
-              <p id="plan-text">Your target plan will appear here after the daily summary completes.</p>
-            </div>
-          </div>
+          </section>
 
         </div>
-      </section>
+
+        <!-- RIGHT COLUMN -->
+        <div class="dashboard-col">
+
+          <!-- LIFESTYLE METRICS -->
+          <section class="dashboard-card card lifestyle-card">
+            <h2><i class="fa-solid fa-heart-pulse"></i> Sleep & Hydration</h2>
+            <div class="lifestyle-grid">
+              <div class="metric-tile sleep-tile">
+                <div class="tile-icon"><i class="fa-solid fa-moon"></i></div>
+                <div class="tile-info">
+                  <h3>Sleep</h3>
+                  <div class="tile-value"><span id="sleep-val">0</span> <span class="unit">hrs</span></div>
+                  <span class="tile-status" id="sleep-status">Target: 7 hrs</span>
+                </div>
+              </div>
+              <div class="metric-tile water-tile">
+                <div class="tile-icon"><i class="fa-solid fa-droplet"></i></div>
+                <div class="tile-info">
+                  <h3>Water</h3>
+                  <div class="tile-value"><span id="water-val">0</span> <span class="unit">L</span></div>
+                  <span class="tile-status" id="water-status">Target: 4 L</span>
+                </div>
+              </div>
+              <div class="metric-tile screen-tile">
+                <div class="tile-icon"><i class="fa-solid fa-mobile-screen-button"></i></div>
+                <div class="tile-info">
+                  <h3>Screen Time</h3>
+                  <div class="tile-value"><span id="screen-val">0</span> <span class="unit">min</span></div>
+                  <span class="tile-status" id="screen-status">Limit: Under 180 min</span>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- MEALS REGISTERED -->
+          <section class="dashboard-card card meals-list-card">
+            <h2><i class="fa-solid fa-utensils"></i> Meals Registered</h2>
+            <div class="meals-details-container" id="meals-details-container">
+              <div class="details-placeholder">No food meals logged today yet.</div>
+            </div>
+          </section>
+
+        </div>
+      </div>
 
     </main>
   </div>
+
 
   <!-- WEEKLY REPORT MODAL OVERLAY -->
   <div class="modal-overlay" id="weekly-modal">
