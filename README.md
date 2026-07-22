@@ -274,5 +274,5 @@ This project is licensed under the **MIT License** - see the [LICENSE](LICENSE) 
 ---
 
 <p align="center">
-  Crafted with ❤️ by the KYH Team
+  Crafted with ❤️ by Madhusudan
 </p>
