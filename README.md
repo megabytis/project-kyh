@@ -16,6 +16,10 @@
 Visit the live production deployment:  
 👉 **[https://kyh.bhuktatech.in](https://kyh.bhuktatech.in)**
 
+<p align="center">
+  <img src="./project-kyh.gif" alt="KYH — Know Your Habit Demo" width="100%" />
+</p>
+
 ### What you can do on the live app:
 * 🥗 **Natural Language Meal Logging**: Enter meals like *"3 eggs, 100g soya chunks, 2 roti"* and let the AI extract calories, protein, carbs, and fats automatically.
 * 🏋️ **Workout Tracking**: Log cardio sessions or weight training exercises (sets, reps, weights, rest duration).
